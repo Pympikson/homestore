@@ -9,4 +9,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('contacts/', include('contacts.urls')),
     path('admin/', admin.site.urls),
+    path('api/', include('api_rest.urls')),
+    path('sentry-debug/', include('api_rest.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -36,6 +39,7 @@ INSTALLED_APPS = [
     'realtors.apps.RealtorsConfig',
     'accounts.apps.AccountsConfig',
     'contacts.apps.ContactsConfig',
+    'api_rest.apps.ApiRestConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,7 +47,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'rest_framework',
+    'django_filters',
+    'import_export',
+    'simple_history',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -53,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'realestate.urls'
@@ -106,6 +116,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'PAGE_SIZE': 2
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -138,3 +154,10 @@ from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
+
+sentry_sdk.init(
+    dsn="https://b76cca1fdabd45f2bdf11b3d479cb98d@o1256505.ingest.sentry.io/6425707",
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=1.0,
+    send_default_pii=True,
+)

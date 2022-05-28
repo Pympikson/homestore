@@ -1,6 +1,14 @@
-from django.db import models
 from datetime import datetime
+
+from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
+from django.db import models
+
+
+
 from realtors.models import Realtor
+from simple_history.models import HistoricalRecords
+
 
 class Listing(models.Model):
   realtor = models.ForeignKey(Realtor, on_delete=models.DO_NOTHING)
@@ -24,5 +32,6 @@ class Listing(models.Model):
   photo_6 = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True)
   is_published = models.BooleanField(default=True)
   list_date = models.DateTimeField(default=datetime.now, blank=True)
+  history = HistoricalRecords()
   def __str__(self):
     return self.title
